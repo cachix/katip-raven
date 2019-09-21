@@ -1,0 +1,5 @@
+resolver: lts-14.5
+packages:
+- .
+extra-deps:
+- raven-haskell-0.1.2.0
