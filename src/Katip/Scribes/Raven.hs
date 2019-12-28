@@ -47,4 +47,4 @@ mkRavenScribe sentryService permitItem verbosity = return $
     sentryName (Katip.Namespace xs) = T.intercalate "." xs
 
     extras :: (HM.HashMap T.Text Aeson.Value -> HM.HashMap String String)
-    extras object = HM.fromList $ map (\(k, v) -> (toS k, show v)) $ HM.toList object
+    extras object = HM.fromList $ map (\(k, v) -> (toS k, toS (Aeson.encode v))) $ HM.toList object
