@@ -21,12 +21,12 @@ mkRavenScribe sentryService permitItem verbosity = return $
     }
   where
     push :: Katip.LogItem a => Katip.Item a -> IO ()
-    push item = Raven.register sentryService (toS name) level (toS msg) updateRecord
+    push item = Raven.register sentryService (toS name) level msg updateRecord
       where
         name = sentryName $ Katip._itemNamespace item
         level = sentryLevel $ Katip._itemSeverity item
-        msg = Builder.toLazyText $ Katip.unLogStr $ Katip._itemMessage item
-        updateRecord record = record 
+        msg = show $ Katip._itemMessage item
+        updateRecord record = record
             { Raven.srEnvironment = Just $ toS $ Katip.getEnvironment $ Katip._itemEnv item
             , Raven.srTimestamp = show $ Katip._itemTime item
             -- add katip context as raven extras
