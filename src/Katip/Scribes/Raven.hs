@@ -8,6 +8,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Lazy.Builder as Builder
 import qualified Data.HashMap.Strict as HM
 import qualified Katip
+import qualified Katip.Core
 import qualified System.Log.Raven as Raven
 import qualified System.Log.Raven.Types as Raven
 import Control.Arrow (first)
@@ -27,11 +28,13 @@ mkRavenScribe sentryService permitItem verbosity = return $
         name = sentryName $ Katip._itemNamespace item
         level = sentryLevel $ Katip._itemSeverity item
         msg = show $ Katip._itemMessage item
+        katipAttrs =
+          foldMap (\loc -> [("loc", Aeson.toJSON $ Katip.Core.LocJs loc)]) (Katip._itemLoc item)
         updateRecord record = record
             { Raven.srEnvironment = Just $ toS $ Katip.getEnvironment $ Katip._itemEnv item
             , Raven.srTimestamp = Katip._itemTime item
             -- add katip context as raven extras
-            , Raven.srExtra = HM.fromList $ map (first T.unpack) $ HM.toList $ Katip.payloadObject verbosity $ Katip._itemPayload item
+            , Raven.srExtra = HM.fromList $ map (first T.unpack) $ (katipAttrs ++) $ HM.toList $ Katip.payloadObject verbosity $ Katip._itemPayload item
             }
 
     sentryLevel :: Katip.Severity -> Raven.SentryLevel
