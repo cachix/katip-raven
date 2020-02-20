@@ -10,6 +10,7 @@ import qualified Data.HashMap.Strict as HM
 import qualified Katip
 import qualified System.Log.Raven as Raven
 import qualified System.Log.Raven.Types as Raven
+import Control.Arrow (first)
 
 
 mkRavenScribe :: Raven.SentryService -> Katip.PermitFunc -> Katip.Verbosity -> IO Katip.Scribe
@@ -28,9 +29,9 @@ mkRavenScribe sentryService permitItem verbosity = return $
         msg = show $ Katip._itemMessage item
         updateRecord record = record
             { Raven.srEnvironment = Just $ toS $ Katip.getEnvironment $ Katip._itemEnv item
-            , Raven.srTimestamp = show $ Katip._itemTime item
+            , Raven.srTimestamp = Katip._itemTime item
             -- add katip context as raven extras
-            , Raven.srExtra = extras $ Katip.payloadObject verbosity $ Katip._itemPayload item
+            , Raven.srExtra = HM.fromList $ map (first T.unpack) $ HM.toList $ Katip.payloadObject verbosity $ Katip._itemPayload item
             }
 
     sentryLevel :: Katip.Severity -> Raven.SentryLevel
@@ -45,6 +46,3 @@ mkRavenScribe sentryService permitItem verbosity = return $
 
     sentryName :: Katip.Namespace -> T.Text
     sentryName (Katip.Namespace xs) = T.intercalate "." xs
-
-    extras :: (HM.HashMap T.Text Aeson.Value -> HM.HashMap String String)
-    extras object = HM.fromList $ map (\(k, v) -> (toS k, toS (Aeson.encode v))) $ HM.toList object
