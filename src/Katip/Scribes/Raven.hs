@@ -11,7 +11,6 @@ import qualified Katip
 import qualified Katip.Core
 import qualified System.Log.Raven as Raven
 import qualified System.Log.Raven.Types as Raven
-import Control.Arrow (first)
 
 
 mkRavenScribe :: Raven.SentryService -> Katip.PermitFunc -> Katip.Verbosity -> IO Katip.Scribe
@@ -29,13 +28,16 @@ mkRavenScribe sentryService permitItem verbosity = return $
         level = sentryLevel $ Katip._itemSeverity item
         msg = show $ Katip._itemMessage item
         katipAttrs =
-          foldMap (\loc -> [("loc", Aeson.toJSON $ Katip.Core.LocJs loc)]) (Katip._itemLoc item)
+          foldMap (\loc -> HM.singleton "loc" $ Aeson.toJSON $ Katip.Core.LocJs loc) (Katip._itemLoc item)
         updateRecord record = record
             { Raven.srEnvironment = Just $ toS $ Katip.getEnvironment $ Katip._itemEnv item
             , Raven.srTimestamp = Katip._itemTime item
             -- add katip context as raven extras
-            , Raven.srExtra = HM.fromList $ map (first T.unpack) $ (katipAttrs ++) $ HM.toList $ Katip.payloadObject verbosity $ Katip._itemPayload item
+            , Raven.srExtra = convertExtra $ Katip.payloadObject verbosity (Katip._itemPayload item) <> katipAttrs
             }
+
+    convertExtra :: HM.HashMap T.Text Aeson.Value -> HM.HashMap String Aeson.Value
+    convertExtra = HM.fromList . map (\(k,v) -> (T.unpack k, v)) . HM.toList
 
     sentryLevel :: Katip.Severity -> Raven.SentryLevel
     sentryLevel Katip.DebugS = Raven.Debug
