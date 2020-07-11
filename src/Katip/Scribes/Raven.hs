@@ -5,6 +5,7 @@ module Katip.Scribes.Raven
 import qualified Data.Aeson as Aeson
 import Data.String.Conv (toS)
 import qualified Data.Text as T
+import qualified Data.Text.Lazy as TL
 import qualified Data.Text.Lazy.Builder as Builder
 import qualified Data.HashMap.Strict as HM
 import qualified Katip
@@ -26,7 +27,7 @@ mkRavenScribe sentryService permitItem verbosity = return $
       where
         name = sentryName $ Katip._itemNamespace item
         level = sentryLevel $ Katip._itemSeverity item
-        msg = show $ Katip._itemMessage item
+        msg = TL.unpack $ Builder.toLazyText $ Katip.Core.unLogStr $ Katip._itemMessage item
         katipAttrs =
           foldMap (\loc -> HM.singleton "loc" $ Aeson.toJSON $ Katip.Core.LocJs loc) (Katip._itemLoc item)
         updateRecord record = record
