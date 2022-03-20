@@ -1,5 +1,9 @@
-resolver: lts-15.6
+resolver: lts-19.0
 packages:
 - .
 extra-deps:
-- raven-haskell-0.1.4.0
+  # raven-haskell >0.1.4.0
+  - git: https://gitlab.com/dpwiz/raven-haskell.git
+    commit: 9dacea2bec9c6f5d9f7d46a2a1d9094cf6147fbf
+    subdirs:
+      - raven-haskell
