@@ -4,12 +4,12 @@ name:                katip-raven
 version:             0.1.0.0
 synopsis:            Katip scribe for raven (https://sentry.io)
 -- description:
-homepage:            https://github.com/hercules-ci/katip-raven
+homepage:            https://github.com/cachix/katip-raven
 -- bug-reports:
 license:             Apache-2.0
 license-file:        LICENSE
 author:              Domen Kozar
-maintainer:          domen@hercules-ci.com
+maintainer:          domen@cachix.org
 -- copyright:
 category:            Web
 extra-source-files:  CHANGELOG.md
@@ -21,7 +21,7 @@ library
                      , aeson
                      , text
                      , katip
-                     , raven-haskell >= 0.1.4.0
+                     , raven-haskell >= 0.1.4.1
                      , string-conv
                      , unordered-containers
   hs-source-dirs:      src
