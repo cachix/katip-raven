@@ -18,7 +18,7 @@ library
   exposed-modules:     Katip.Scribes.Raven
   default-extensions:  Rank2Types, OverloadedStrings
   build-depends:       base >=4.11 && <5
-                     , aeson
+                     , aeson >= 2.0.0.0
                      , text
                      , katip
                      , raven-haskell >= 0.1.4.1

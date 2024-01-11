@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP #-}
 module Katip.Scribes.Raven
   ( mkRavenScribe
   ) where
@@ -13,13 +12,7 @@ import qualified Katip
 import qualified Katip.Core
 import qualified System.Log.Raven as Raven
 import qualified System.Log.Raven.Types as Raven
-#if MIN_VERSION_aeson(2,0,0)
 import Data.Aeson.KeyMap (fromHashMapText, toHashMapText)
-#else
-toHashMapText, fromHashMapText :: HM.HashMap T.Text Aeson.Value -> HM.HashMap T.Text Aeson.Value
-fromHashMapText = id
-toHashMapText = id
-#endif
 
 mkRavenScribe :: Raven.SentryService -> Katip.PermitFunc -> Katip.Verbosity -> IO Katip.Scribe
 mkRavenScribe sentryService permitItem verbosity = return $

@@ -10,10 +10,10 @@ packages:
       sha256: e8f14bfed6b055dc95933257441ba97d3d779cbe08a0e82c3c2dff5d69c8c48f
       size: 632
   original:
-    hackage: raven-haskell-0.1.4.1@sha256:9187272adc064197528645b5ad9b89163b668f386f34016d97fa646d5c790784,1479
+    hackage: raven-haskell-0.1.4.1
 snapshots:
 - completed:
-    sha256: a81fb3877c4f9031e1325eb3935122e608d80715dc16b586eb11ddbff8671ecd
-    size: 640086
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/25.yaml
-  original: lts-21.25
+    sha256: 90e6fcdcf6706918ef022ab01214828c550ee637a2d50f4fe96b15742b8bced1
+    size: 714102
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/22/5.yaml
+  original: lts-22.5
