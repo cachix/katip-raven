@@ -12,8 +12,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: sol/haskell-autotag@v1
         id: autotag
-        with:
-          prefix: null
       - run: cabal sdist
       - uses: haskell-actions/hackage-publish@v1.1
         with:
